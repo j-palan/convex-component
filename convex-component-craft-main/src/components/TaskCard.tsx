@@ -37,15 +37,31 @@ const typeLabels = {
 };
 
 export function TaskCard({ task }: TaskCardProps) {
-  const [expanded, setExpanded] = useState(false);
+  // Auto-expand completed or failed tasks so the user sees results immediately
+  const hasOutput = !!(task.result || task.error);
+  const [expanded, setExpanded] = useState(
+    hasOutput && (task.status === "completed" || task.status === "failed")
+  );
   const Icon = typeIcons[task.type];
   const isRunning = task.status === "running";
+
+  // Build a short preview string for collapsed view
+  const resultPreview = (() => {
+    if (task.error) return `Error: ${task.error.slice(0, 80)}`;
+    if (!task.result) return null;
+    const str = typeof task.result === "string"
+      ? task.result
+      : JSON.stringify(task.result);
+    return str.length > 100 ? str.slice(0, 100) + "…" : str;
+  })();
 
   return (
     <div
       className={cn(
         "card-cyber overflow-hidden transition-all duration-300",
-        isRunning && "border-primary/50"
+        isRunning && "border-primary/50",
+        task.status === "completed" && "border-accent/30",
+        task.status === "failed" && "border-destructive/30"
       )}
     >
       <div
@@ -81,12 +97,21 @@ export function TaskCard({ task }: TaskCardProps) {
                 {task.url}
               </p>
             )}
+            {/* Show a brief preview when collapsed */}
+            {!expanded && resultPreview && (
+              <p className={cn(
+                "text-xs mt-2 line-clamp-2 font-mono",
+                task.error ? "text-destructive/80" : "text-accent/80"
+              )}>
+                {resultPreview}
+              </p>
+            )}
           </div>
           <div className="flex flex-col items-end gap-2">
             <span className="text-xs text-muted-foreground">
               {formatDistanceToNow(task.createdAt, { addSuffix: true })}
             </span>
-            {(task.result || task.error) && (
+            {hasOutput && (
               expanded ? (
                 <ChevronUp className="w-4 h-4 text-muted-foreground" />
               ) : (
@@ -97,17 +122,19 @@ export function TaskCard({ task }: TaskCardProps) {
         </div>
       </div>
 
-      {expanded && (task.result || task.error) && (
+      {expanded && hasOutput && (
         <div className="border-t border-border px-4 py-3 bg-muted/20">
           {task.error ? (
             <div className="code-block text-destructive">
-              <span className="text-xs">Error: </span>
-              {task.error}
+              <span className="text-xs font-bold">Error: </span>
+              <span className="text-xs">{task.error}</span>
             </div>
           ) : (
-            <div className="code-block">
-              <pre className="text-xs overflow-x-auto">
-                {JSON.stringify(task.result, null, 2)}
+            <div className="code-block max-h-96 overflow-y-auto scrollbar-cyber">
+              <pre className="text-xs overflow-x-auto whitespace-pre-wrap text-accent">
+                {typeof task.result === "string"
+                  ? task.result
+                  : JSON.stringify(task.result, null, 2)}
               </pre>
             </div>
           )}
