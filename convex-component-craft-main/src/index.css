@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "@fontsource/jetbrains-mono";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Cyberpunk Browser Automation Theme */
+
+@layer base {
+  :root {
+    /* Core dark palette */
+    --background: 220 20% 4%;
+    --foreground: 180 100% 95%;
+
+    --card: 220 20% 6%;
+    --card-foreground: 180 100% 95%;
+
+    --popover: 220 20% 8%;
+    --popover-foreground: 180 100% 95%;
+
+    /* Neon cyan primary */
+    --primary: 180 100% 50%;
+    --primary-foreground: 220 20% 4%;
+
+    /* Muted purple secondary */
+    --secondary: 270 50% 15%;
+    --secondary-foreground: 270 100% 85%;
+
+    --muted: 220 20% 12%;
+    --muted-foreground: 220 20% 55%;
+
+    /* Neon green accent */
+    --accent: 150 100% 45%;
+    --accent-foreground: 220 20% 4%;
+
+    /* Neon red destructive */
+    --destructive: 0 100% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 15%;
+    --input: 220 20% 12%;
+    --ring: 180 100% 50%;
+
+    --radius: 0.5rem;
+
+    /* Custom colors */
+    --neon-cyan: 180 100% 50%;
+    --neon-green: 150 100% 45%;
+    --neon-purple: 280 100% 60%;
+    --neon-pink: 330 100% 60%;
+    --neon-yellow: 50 100% 55%;
+    --terminal-green: 120 100% 40%;
+    
+    /* Gradients */
+    --gradient-cyber: linear-gradient(135deg, hsl(var(--neon-cyan)) 0%, hsl(var(--neon-purple)) 100%);
+    --gradient-matrix: linear-gradient(180deg, hsl(var(--neon-green) / 0.1) 0%, transparent 100%);
+    --gradient-glow: radial-gradient(ellipse at center, hsl(var(--primary) / 0.15) 0%, transparent 70%);
+    
+    /* Shadows */
+    --shadow-neon: 0 0 20px hsl(var(--primary) / 0.5), 0 0 40px hsl(var(--primary) / 0.2);
+    --shadow-neon-sm: 0 0 10px hsl(var(--primary) / 0.4);
+    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(var(--primary) / 0.1);
+
+    --sidebar-background: 220 20% 5%;
+    --sidebar-foreground: 180 100% 90%;
+    --sidebar-primary: 180 100% 50%;
+    --sidebar-primary-foreground: 220 20% 4%;
+    --sidebar-accent: 220 20% 10%;
+    --sidebar-accent-foreground: 180 100% 90%;
+    --sidebar-border: 220 20% 12%;
+    --sidebar-ring: 180 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  /* Terminal-style scrollbar */
+  .scrollbar-cyber::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-cyber::-webkit-scrollbar-track {
+    @apply bg-muted rounded-full;
+  }
+
+  .scrollbar-cyber::-webkit-scrollbar-thumb {
+    @apply bg-primary/50 rounded-full;
+  }
+
+  .scrollbar-cyber::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/70;
+  }
+
+  /* Neon glow effects */
+  .glow-cyan {
+    box-shadow: var(--shadow-neon);
+  }
+
+  .glow-cyan-sm {
+    box-shadow: var(--shadow-neon-sm);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.8), 0 0 20px hsl(var(--primary) / 0.4);
+  }
+
+  .text-glow-green {
+    text-shadow: 0 0 10px hsl(var(--accent) / 0.8), 0 0 20px hsl(var(--accent) / 0.4);
+  }
+
+  /* Terminal window styling */
+  .terminal-window {
+    @apply bg-card border border-border rounded-lg overflow-hidden;
+    box-shadow: var(--shadow-card);
+  }
+
+  .terminal-header {
+    @apply flex items-center gap-2 px-4 py-2 bg-muted/50 border-b border-border;
+  }
+
+  .terminal-dot {
+    @apply w-3 h-3 rounded-full;
+  }
+
+  .terminal-dot-red { @apply bg-destructive; }
+  .terminal-dot-yellow { @apply bg-[hsl(var(--neon-yellow))]; }
+  .terminal-dot-green { @apply bg-accent; }
+
+  /* Cyber button */
+  .btn-cyber {
+    @apply relative px-6 py-2 font-mono text-sm font-medium uppercase tracking-wider;
+    @apply bg-primary text-primary-foreground;
+    @apply border border-primary rounded;
+    @apply transition-all duration-200;
+    box-shadow: var(--shadow-neon-sm);
+  }
+
+  .btn-cyber:hover {
+    @apply bg-primary/90;
+    box-shadow: var(--shadow-neon);
+  }
+
+  .btn-cyber:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    box-shadow: none;
+  }
+
+  /* Status indicators */
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .status-dot-active {
+    @apply bg-accent animate-pulse;
+    box-shadow: 0 0 8px hsl(var(--accent));
+  }
+
+  .status-dot-inactive {
+    @apply bg-muted-foreground;
+  }
+
+  .status-dot-error {
+    @apply bg-destructive animate-pulse;
+    box-shadow: 0 0 8px hsl(var(--destructive));
+  }
+
+  /* Matrix rain background */
+  .matrix-bg {
+    background: var(--gradient-matrix);
+  }
+
+  /* Card with cyber border */
+  .card-cyber {
+    @apply bg-card border border-border rounded-lg;
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-cyber:hover {
+    @apply border-primary/30;
+  }
+
+  /* Code block styling */
+  .code-block {
+    @apply bg-muted/50 border border-border rounded-md p-4 font-mono text-sm;
+    @apply overflow-x-auto scrollbar-cyber;
+  }
+
+  /* Animated border */
+  .border-animated {
+    @apply relative;
+  }
+
+  .border-animated::before {
+    content: '';
+    @apply absolute inset-0 rounded-lg;
+    background: linear-gradient(90deg, 
+      hsl(var(--primary)) 0%, 
+      hsl(var(--neon-purple)) 50%, 
+      hsl(var(--primary)) 100%
+    );
+    background-size: 200% 100%;
+    animation: border-flow 3s linear infinite;
+    z-index: -1;
+    margin: -1px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    padding: 1px;
+    border-radius: inherit;
+  }
+
+  @keyframes border-flow {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Typing cursor animation */
+  .cursor-blink::after {
+    content: '▊';
+    @apply text-primary ml-1;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+}
+
+@layer utilities {
+  .gradient-cyber {
+    background: var(--gradient-cyber);
+  }
+
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
